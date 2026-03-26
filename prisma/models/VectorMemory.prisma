@@ -1,0 +1,37 @@
+model VectorMemory {
+  id        Int                          @id @default(autoincrement())
+  novelId   Int
+  type      String // "chapter_summary" | "event" | "character_memory"
+  content   String                       @db.Text
+  embedding Unsupported("vector(1536)")?
+  metadata  Json?
+  createdAt DateTime                     @default(now())
+  updatedAt DateTime                     @updatedAt
+
+  // 关联关系
+  novel Novel @relation(fields: [novelId], references: [id], onDelete: Cascade)
+
+  @@index([novelId])
+  @@index([type])
+  @@map("vector_memories")
+}
+
+// ============================================================
+// 注意：Prisma 原生不支持向量索引，需要手动执行以下 SQL：
+// ============================================================
+//
+// -- 启用 pgvector 扩展
+// CREATE EXTENSION IF NOT EXISTS vector;
+//
+// -- 为 embedding 字段创建向量索引 (使用 HNSW 算法，适合高性能近似搜索)
+// CREATE INDEX IF NOT EXISTS vector_memories_embedding_idx
+// ON vector_memories
+// USING hnsw (embedding vector_cosine_ops)
+// WITH (m = 16, ef_construction = 64);
+//
+// -- 或者使用 IVFFlat 索引 (适合大数据量)
+// -- CREATE INDEX IF NOT EXISTS vector_memories_embedding_ivfflat_idx
+// -- ON vector_memories
+// -- USING ivfflat (embedding vector_cosine_ops)
+// -- WITH (lists = 100);
+// ============================================================

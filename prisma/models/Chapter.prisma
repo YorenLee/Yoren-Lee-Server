@@ -1,0 +1,17 @@
+model Chapter {
+  id        Int      @id @default(autoincrement())
+  novelId   Int
+  index     Int // 第几章
+  title     String
+  content   String   @db.Text
+  summary   String?  @db.Text // 用于生成 embedding
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // 关联关系
+  novel Novel @relation(fields: [novelId], references: [id], onDelete: Cascade)
+
+  @@unique([novelId, index])
+  @@index([novelId])
+  @@map("chapters")
+}

@@ -1,0 +1,16 @@
+model Session {
+  id        Int      @id @default(autoincrement())
+  novelId   Int
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // 关联关系
+  novel    Novel     @relation(fields: [novelId], references: [id], onDelete: Cascade)
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages Message[]
+
+  @@index([novelId])
+  @@index([userId])
+  @@map("sessions")
+}

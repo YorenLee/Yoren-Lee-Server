@@ -1,23 +1,19 @@
 model Account {
-  id            Int      @id @default(autoincrement())
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  provider     String // github, google, feishu ...
+  providerId   String // 第三方返回的唯一 id
+  username     String?
+  email        String?
+  avatar       String?
+  accessToken  String?
+  refreshToken String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  userId        Int
-  user          User     @relation(fields: [userId], references: [id])
-
-  provider      String   // github, google, feishu ...
-  providerId    String   // github 返回的 id
-
-  username      String?
-  email         String?
-  avatar        String?
-
-  accessToken   String?  // 可选保存
-  refreshToken  String?
-
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  // 关联关系
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerId])
-
   @@map("accounts")
 }

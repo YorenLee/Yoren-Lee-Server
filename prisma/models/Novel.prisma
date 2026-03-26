@@ -1,0 +1,18 @@
+model Novel {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  title       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // 关联关系
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chapters       Chapter[]
+  characters     Character[]
+  sessions       Session[]
+  vectorMemories VectorMemory[]
+
+  @@index([userId])
+  @@map("novels")
+}

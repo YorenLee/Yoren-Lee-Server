@@ -1,0 +1,16 @@
+model Character {
+  id          Int      @id @default(autoincrement())
+  novelId     Int
+  name        String
+  personality String?  @db.Text
+  background  String?  @db.Text
+  metadata    Json? // 存储人物关系、设定等扩展信息
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // 关联关系
+  novel Novel @relation(fields: [novelId], references: [id], onDelete: Cascade)
+
+  @@index([novelId])
+  @@map("characters")
+}
