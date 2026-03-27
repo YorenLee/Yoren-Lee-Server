@@ -8,10 +8,9 @@ model Novel {
 
   // 关联关系
   user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  chapters       Chapter[]
-  characters     Character[]
-  sessions       Session[]
-  vectorMemories VectorMemory[]
+  chapters   Chapter[]
+  characters Character[]
+  sessions   Session[]
 
   @@index([userId])
   @@map("novels")
